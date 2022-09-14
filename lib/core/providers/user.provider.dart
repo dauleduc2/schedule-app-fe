@@ -10,5 +10,5 @@ final defaultUser = User(
 
 class UserProvider extends ChangeNotifier {
   User _currentUser = defaultUser;
-  bool isLogin = true;
+  bool isLogin = false;
 }

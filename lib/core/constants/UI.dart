@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:schedule_app_fe/core/constants/routes.dart';
 
-List<Map<String, dynamic>> drawer_user_selections = [
-  {'text': 'Home', 'icon': Icons.home},
-  {'text': 'Profile', 'icon': Icons.person},
-  {'text': 'Settings', 'icon': Icons.settings},
-  {'text': 'Logout', 'icon': Icons.logout},
-];
-List<Map<String, dynamic>> drawer_guess_selections = [
-  {'text': 'Home', 'icon': Icons.home},
-  {'text': 'Settings', 'icon': Icons.settings},
-  {'text': 'Login', 'icon': Icons.login},
+class NavbarSelection {
+  final String label;
+  final IconData icon;
+  final String path;
+  const NavbarSelection(
+      {required this.label, required this.icon, required this.path});
+}
+
+const List<NavbarSelection> navbarSelections = [
+  NavbarSelection(
+      label: 'Schedule', icon: Icons.schedule, path: RoutePath.schedule),
+  NavbarSelection(
+      label: 'Money', icon: Icons.attach_money, path: RoutePath.money),
+  NavbarSelection(
+      label: 'Profile', icon: Icons.person, path: RoutePath.profile),
+  NavbarSelection(
+      label: 'Settings', icon: Icons.settings, path: RoutePath.setting),
 ];
