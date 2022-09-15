@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
         ),
         home: Consumer<UserProvider>(
           builder: (context, value, child) => Scaffold(
-            // resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               title: const Text('Schedule App'),
             ),

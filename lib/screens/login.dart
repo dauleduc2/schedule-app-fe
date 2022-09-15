@@ -1,8 +1,16 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:schedule_app_fe/screens/register.dart';
+import 'package:flutter/gestures.dart' show Offset, TapGestureRecognizer;
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,20 +60,28 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    RichText(
-                      textAlign: TextAlign.end,
-                      text: TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: 'Don\'t have an account? ',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          TextSpan(
-                              text: 'Sign up',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 15))
-                        ],
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(PageRouteBuilder(
+                            pageBuilder: (c, a1, a2) => RegisterScreen(),
+                            transitionsBuilder: (c, anim, a2, child) =>
+                                SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(1, 0),
+                                      end: const Offset(0, 0),
+                                    ).animate(CurvedAnimation(
+                                        curve: const Interval(0, 1),
+                                        parent: anim)),
+                                    child: child),
+                            reverseTransitionDuration:
+                                const Duration(milliseconds: 300),
+                            transitionDuration:
+                                const Duration(milliseconds: 300),
+                          ));
+                        },
+                        child: Text('Register an account'),
                       ),
                     ),
                     const SizedBox(height: 5),
