@@ -9,10 +9,13 @@ import 'package:flutter/material.dart'
         ThemeData,
         Widget,
         Icons,
+        TextTheme,
         runApp;
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart'
     show ChangeNotifierProvider, MultiProvider, Consumer;
+import 'package:schedule_app_fe/core/injection/index.dart';
+import 'package:schedule_app_fe/core/providers/api.provider.dart';
 import 'package:schedule_app_fe/core/providers/user.provider.dart'
     show UserProvider;
 import 'package:schedule_app_fe/screens/login.dart';
@@ -33,6 +36,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+
+  @override
+  void initState() {
+    configureDependencies();
+    super.initState();
+  }
+
   int _currentIndex = 0;
   List<Widget> widgetList = <Widget>[
     const ScheduleScreen(),
@@ -49,23 +59,32 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (ctx) => UserProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => UserProvider()),
+        ChangeNotifierProvider(create: (ctx) => ApiProvider())
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          backgroundColor: Colors.grey[200],
-          primaryColorLight: Colors.blue,
-          primaryColorDark: Colors.black54,
-        ),
+            primarySwatch: Colors.blue,
+            backgroundColor: Colors.grey[200],
+            primaryColorLight: Colors.blue,
+            primaryColorDark: Colors.black54,
+            textTheme: const TextTheme(
+              labelSmall: TextStyle(fontSize: 8),
+            )),
         home: Consumer<UserProvider>(
           builder: (context, value, child) => Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
               title: const Text('Schedule App'),
             ),
-            body:
-                value.isLogin ? widgetList[_currentIndex] : const LoginScreen(),
+            body: FractionallySizedBox(
+                widthFactor: 1,
+                heightFactor: 1,
+                child: value.isLogin
+                    ? widgetList[_currentIndex]
+                    : const LoginScreen()),
             bottomNavigationBar: value.isLogin
                 ? CBottomNavigationBar(
                     currentIndex: _currentIndex, onChangeTab: _onChangeTab)

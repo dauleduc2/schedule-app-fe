@@ -1,7 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:schedule_app_fe/core/api/auth.api.dart';
+import 'package:schedule_app_fe/core/form/TextField.dart';
 import 'package:schedule_app_fe/screens/register.dart';
-import 'package:flutter/gestures.dart' show Offset, TapGestureRecognizer;
+import 'package:schedule_app_fe/util/route.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,6 +12,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _onSubmit() {
+    AuthApi.login(_usernameController.text, _passwordController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Flexible(
-            fit: FlexFit.tight,
             child: Container(
               padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
               decoration: const BoxDecoration(
@@ -46,52 +53,36 @@ class _LoginScreenState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 10),
-                    const TextField(
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
-                        labelText: 'Username',
-                      ),
+                    TextFieldC(
+                      controller: _usernameController,
+                      label: 'Username',
+                      name: 'username',
                     ),
                     const SizedBox(height: 10),
-                    const TextField(
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
-                        labelText: 'password',
-                      ),
+                    TextFieldC(
+                      controller: _passwordController,
+                      label: 'Password',
+                      name: 'password',
+                      isPassword: true,
                     ),
                     const SizedBox(height: 30),
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(PageRouteBuilder(
-                            pageBuilder: (c, a1, a2) => RegisterScreen(),
-                            transitionsBuilder: (c, anim, a2, child) =>
-                                SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(1, 0),
-                                      end: const Offset(0, 0),
-                                    ).animate(CurvedAnimation(
-                                        curve: const Interval(0, 1),
-                                        parent: anim)),
-                                    child: child),
-                            reverseTransitionDuration:
-                                const Duration(milliseconds: 300),
-                            transitionDuration:
-                                const Duration(milliseconds: 300),
-                          ));
+                          PageNavigator.rightToLeft(context, RegisterScreen());
                         },
                         child: Text('Register an account'),
                       ),
                     ),
                     const SizedBox(height: 5),
                     ElevatedButton(
-                        onPressed: () {}, child: const Text('Login')),
+                        onPressed: _onSubmit, child: const Text('Login')),
                   ],
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -12,3 +12,5 @@ class UserProvider extends ChangeNotifier {
   User _currentUser = defaultUser;
   bool isLogin = false;
 }
+
+final userProvider = UserProvider();
