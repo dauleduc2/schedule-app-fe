@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:schedule_app_fe/core/api/apiUtil.dart';
 import 'package:schedule_app_fe/core/api/auth.api.dart';
 import 'package:schedule_app_fe/core/form/TextField.dart';
 import 'package:schedule_app_fe/screens/register.dart';
@@ -15,8 +16,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _onSubmit() {
-    AuthApi.login(_usernameController.text, _passwordController.text);
+  void _onSubmit() async {
+    var response =
+        await AuthApi.login(_usernameController.text, _passwordController.text);
+    print(response);
+    setState(() {});
   }
 
   @override
@@ -56,13 +60,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFieldC(
                       controller: _usernameController,
                       label: 'Username',
-                      name: 'username',
+                      error: apiUtil.getErrorByField('username'),
                     ),
                     const SizedBox(height: 10),
                     TextFieldC(
                       controller: _passwordController,
                       label: 'Password',
-                      name: 'password',
+                      error: apiUtil.getErrorByField('password'),
                       isPassword: true,
                     ),
                     const SizedBox(height: 30),

@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart' show ChangeNotifier;
 
-class ApiProvider extends ChangeNotifier {
+class ApiUtil {
   bool isGlobalLoading = false;
   bool isLocalLoading = false;
   Map<String, String> errorDetails = {};
@@ -23,10 +22,11 @@ class ApiProvider extends ChangeNotifier {
     if (response != null) {
       errorDetails = json.decode(response.toString()).cast<String, String>();
     }
-    notifyListeners();
   }
 
-  String getErrorByField(String field, String message) {
-    return errorDetails[field] = message;
+  String getErrorByField(String field) {
+    return errorDetails[field] ?? '';
   }
 }
+
+final apiUtil = ApiUtil();

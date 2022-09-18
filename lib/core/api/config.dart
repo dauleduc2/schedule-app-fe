@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:schedule_app_fe/core/injection/index.dart';
-import 'package:schedule_app_fe/core/providers/api.provider.dart';
+import 'package:schedule_app_fe/core/api/apiUtil.dart';
 
 class ApiClient {
-  final _apiProvider = locator.get<ApiProvider>();
   Dio http = Dio(
     BaseOptions(
       baseUrl: 'http://10.0.2.2:4000/api',
@@ -25,8 +21,8 @@ class ApiClient {
       return handler.next(response); // continue
     }, onError: (DioError e, handler) {
       // Do something with response error
-      _apiProvider.setGlobalLoading = true;
-      _apiProvider.setErrorDetails(e.response);
+      apiUtil.setGlobalLoading = true;
+      apiUtil.setErrorDetails(e.response);
 
       return handler.next(e); //continue
     }));

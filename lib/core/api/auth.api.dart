@@ -10,7 +10,6 @@ class AuthApi {
             'username': username,
             'password': password,
           }));
-
       if (response.statusCode == 200) return response;
     } catch (e) {
       return null;

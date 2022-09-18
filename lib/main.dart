@@ -8,14 +8,11 @@ import 'package:flutter/material.dart'
         Text,
         ThemeData,
         Widget,
-        Icons,
         TextTheme,
         runApp;
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart'
     show ChangeNotifierProvider, MultiProvider, Consumer;
-import 'package:schedule_app_fe/core/injection/index.dart';
-import 'package:schedule_app_fe/core/providers/api.provider.dart';
 import 'package:schedule_app_fe/core/providers/user.provider.dart'
     show UserProvider;
 import 'package:schedule_app_fe/screens/login.dart';
@@ -37,12 +34,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
 
-  @override
-  void initState() {
-    configureDependencies();
-    super.initState();
-  }
-
   int _currentIndex = 0;
   List<Widget> widgetList = <Widget>[
     const ScheduleScreen(),
@@ -50,6 +41,7 @@ class _MyAppState extends State<MyApp> {
     const ProfileScreen(),
     const SettingScreen(),
   ];
+
   void _onChangeTab(int index) {
     setState(() {
       _currentIndex = index;
@@ -61,7 +53,6 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => UserProvider()),
-        ChangeNotifierProvider(create: (ctx) => ApiProvider())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

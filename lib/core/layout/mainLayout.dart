@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:schedule_app_fe/core/providers/user.provider.dart';
 import 'package:schedule_app_fe/screens/money.dart';
