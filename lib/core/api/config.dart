@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:schedule_app_fe/core/constants/store.dart';
 import 'package:schedule_app_fe/core/injection/index.dart';
 import 'package:schedule_app_fe/core/providers/api.provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
-  final _apiProvider = locator.get<ApiProvider>();
+  final _apiProvider = getIt<ApiProvider>();
   Dio http = Dio(
     BaseOptions(
       baseUrl: 'http://10.0.2.2:4000/api',
@@ -17,18 +19,25 @@ class ApiClient {
   }
 
   handleOnLoad() async {
-    http.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-      // Do something before request is sent
-      return handler.next(options); //continue
-    }, onResponse: (response, handler) {
-      // Do something with response data
-      return handler.next(response); // continue
-    }, onError: (DioError e, handler) {
-      // Do something with response error
-      _apiProvider.setGlobalLoading = true;
-      _apiProvider.setErrorDetails(e.response);
+    http.interceptors
+        .add(InterceptorsWrapper(onRequest: (options, handler) async {
+      final prefs = await SharedPreferences.getInstance();
+      // include headers
+      if (prefs.containsKey(StoreKey.authToken)) {
+        options.headers[StoreKey.authToken] =
+            'Bearer ${prefs.getString(StoreKey.authToken)}';
+      }
 
-      return handler.next(e); //continue
+      return handler.next(options);
+    }, onResponse: (response, handler) {
+      return handler.next(response);
+    }, onError: (DioError e, handler) {
+      if (e.response?.statusCode == 400) {
+        var errorDetails =
+            json.decode(e.response.toString()).cast<String, String>();
+        _apiProvider.setErrorDetails(errorDetails);
+      }
+      return handler.next(json.decode(e.response.toString()));
     }));
   }
 }

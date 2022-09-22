@@ -10,8 +10,16 @@ class AuthApi {
             'username': username,
             'password': password,
           }));
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
 
-      if (response.statusCode == 200) return response;
+  static Future<dynamic> getCurrentUser() async {
+    try {
+      final response = await httpClient.http.get('/users/me');
+      return response;
     } catch (e) {
       return null;
     }

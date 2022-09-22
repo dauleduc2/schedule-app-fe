@@ -2,43 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:schedule_app_fe/core/providers/api.provider.dart';
 
-class TextFieldC extends StatefulWidget {
+class TextFieldC extends StatelessWidget {
   TextEditingController controller;
   String? label;
   bool isPassword;
+  String error;
   String name;
   TextFieldC(
       {super.key,
       required this.controller,
-      required this.name,
+      this.error = '',
       this.label = '',
+      this.name = '',
       this.isPassword = false});
 
-  @override
-  State<TextFieldC> createState() => _TextFieldCState();
-}
-
-class _TextFieldCState extends State<TextFieldC> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ApiProvider>(
       builder: (context, value, child) {
-        var error = value.errorDetails[widget.name];
-        print('${widget.name}: ${error}');
+        final String error = value.errorDetails[name] ?? '';
         return Column(
           children: [
             TextField(
-              controller: widget.controller,
-              obscureText: widget.isPassword,
+              controller: controller,
+              obscureText: isPassword,
               decoration: InputDecoration(
                 border: const UnderlineInputBorder(),
-                labelText: widget.label,
+                labelText: label,
               ),
             ),
-            error != null
-                ? const SizedBox(height: 10)
-                : const SizedBox.shrink(),
-            error != null
+            error != '' ? const SizedBox(height: 10) : const SizedBox.shrink(),
+            error != ''
                 ? Align(
                     alignment: Alignment.topLeft,
                     child: Text(

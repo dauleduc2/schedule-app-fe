@@ -8,7 +8,6 @@ import 'package:flutter/material.dart'
         Text,
         ThemeData,
         Widget,
-        Icons,
         TextTheme,
         runApp;
 import 'package:flutter/widgets.dart';
@@ -24,8 +23,12 @@ import 'package:schedule_app_fe/screens/profile.dart';
 import 'package:schedule_app_fe/screens/schedule.dart';
 import 'package:schedule_app_fe/screens/setting.dart';
 import 'package:schedule_app_fe/widgets/bottomNavigation/index.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  configureDependencies();
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -35,21 +38,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
-
-  @override
-  void initState() {
-    configureDependencies();
-    super.initState();
-  }
+  final ApiProvider _apiProvider = getIt<ApiProvider>();
+  final UserProvider _userProvider = getIt<UserProvider>();
 
   int _currentIndex = 0;
+
   List<Widget> widgetList = <Widget>[
     const ScheduleScreen(),
     const MoneyScreen(),
     const ProfileScreen(),
     const SettingScreen(),
   ];
+
   void _onChangeTab(int index) {
     setState(() {
       _currentIndex = index;
@@ -60,8 +60,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (ctx) => UserProvider()),
-        ChangeNotifierProvider(create: (ctx) => ApiProvider())
+        ChangeNotifierProvider(create: (ctx) => _userProvider),
+        ChangeNotifierProvider(create: (ctx) => _apiProvider)
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
