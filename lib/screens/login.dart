@@ -6,8 +6,10 @@ import 'package:schedule_app_fe/core/constants/store.dart';
 import 'package:schedule_app_fe/core/form/ErrorMessage.dart';
 import 'package:schedule_app_fe/core/form/TextField.dart';
 import 'package:schedule_app_fe/core/injection/index.dart';
+import 'package:schedule_app_fe/core/providers/user.provider.dart';
 import 'package:schedule_app_fe/screens/register.dart';
 import 'package:schedule_app_fe/util/route.dart';
+import 'package:schedule_app_fe/util/sharePreferenceHelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,17 +20,25 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final AuthApi _authApi = getIt<AuthApi>();
+  final UserProvider _userProvider = getIt<UserProvider>();
+
   final TextEditingController _usernameController =
       TextEditingController(text: 'dauleduc2');
   final TextEditingController _passwordController =
       TextEditingController(text: '12345678');
 
   void _onSubmit() async {
-    var response =
-        await AuthApi.login(_usernameController.text, _passwordController.text);
-    var token = json.decode(response.toString())["token"] as String;
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(StoreKey.authToken, token);
+    var response = await _authApi.login(
+        _usernameController.text, _passwordController.text);
+    var token = json.decode(response.toString())?["token"] as String;
+
+    // save auth token to preference
+    final SharedPreferenceHelper preferenceHelper =
+        getIt<SharedPreferenceHelper>();
+    preferenceHelper.saveAuthToken(token);
+
+    _userProvider.setIsLogin = true;
   }
 
   @override

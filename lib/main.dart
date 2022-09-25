@@ -1,33 +1,26 @@
-import 'package:flutter/material.dart'
-    show
-        AppBar,
-        BuildContext,
-        Colors,
-        MaterialApp,
-        Scaffold,
-        Text,
-        ThemeData,
-        Widget,
-        TextTheme,
-        runApp;
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart'
-    show ChangeNotifierProvider, MultiProvider, Consumer;
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:schedule_app_fe/core/injection/index.dart';
 import 'package:schedule_app_fe/core/providers/api.provider.dart';
-import 'package:schedule_app_fe/core/providers/user.provider.dart'
-    show UserProvider;
-import 'package:schedule_app_fe/screens/login.dart';
+import 'package:schedule_app_fe/core/providers/user.provider.dart';
 import 'package:schedule_app_fe/screens/money.dart';
 import 'package:schedule_app_fe/screens/profile.dart';
 import 'package:schedule_app_fe/screens/schedule.dart';
 import 'package:schedule_app_fe/screens/setting.dart';
+import 'package:schedule_app_fe/widgets/autoLogin/autoLogin.dart';
 import 'package:schedule_app_fe/widgets/bottomNavigation/index.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  configureDependencies();
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies();
+  return runZonedGuarded(() async {
+    runApp(const MyApp());
+  }, (error, stack) {
+    print(stack);
+    print(error);
+  });
 }
 
 class MyApp extends StatefulWidget {
@@ -80,11 +73,10 @@ class _MyAppState extends State<MyApp> {
               title: const Text('Schedule App'),
             ),
             body: FractionallySizedBox(
-                widthFactor: 1,
-                heightFactor: 1,
-                child: value.isLogin
-                    ? widgetList[_currentIndex]
-                    : const LoginScreen()),
+              widthFactor: 1,
+              heightFactor: 1,
+              child: AutoLogin(children: widgetList[_currentIndex]),
+            ),
             bottomNavigationBar: value.isLogin
                 ? CBottomNavigationBar(
                     currentIndex: _currentIndex, onChangeTab: _onChangeTab)

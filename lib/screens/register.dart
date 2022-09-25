@@ -1,21 +1,35 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:schedule_app_fe/core/api/auth.api.dart';
+import 'package:schedule_app_fe/core/form/TextField.dart';
+import 'package:schedule_app_fe/core/injection/index.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
-
-  final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final AuthApi _authApi = getIt<AuthApi>();
+  final TextEditingController _nameController =
+      TextEditingController(text: 'admin');
+  final TextEditingController _emailController =
+      TextEditingController(text: 'admin@gmail.com');
+  final TextEditingController _usernameController =
+      TextEditingController(text: 'admin');
+  final TextEditingController _passwordController =
+      TextEditingController(text: '12345678');
   final TextEditingController _confirmPasswordController =
-      TextEditingController();
+      TextEditingController(text: '12345678');
 
-  void _onSubmit() {
-    print(_fullNameController.text);
-    print(_emailController.text);
-    print(_usernameController.text);
-    print(_passwordController.text);
-    print(_confirmPasswordController.text);
+  void _onSubmit(BuildContext context, VoidCallback onSuccess) async {
+    var response = await _authApi.register(
+        username: _usernameController.text,
+        email: _emailController.text,
+        name: _nameController.text,
+        password: _passwordController.text,
+        confirmPassword: _confirmPasswordController.text);
+
+    var token = json.decode(response.toString())?["token"] as String;
+
+    if (token != '') onSuccess();
   }
 
   @override
@@ -62,46 +76,36 @@ class RegisterScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 10),
-                            TextField(
-                              controller: _fullNameController,
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                labelText: 'Full name',
-                              ),
+                            TextFieldC(
+                              controller: _nameController,
+                              label: 'Name',
+                              name: 'name',
                             ),
                             const SizedBox(height: 10),
-                            TextField(
+                            TextFieldC(
                               controller: _emailController,
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                labelText: 'Email',
-                              ),
+                              label: "Email",
+                              name: 'email',
                             ),
                             const SizedBox(height: 10),
-                            TextField(
+                            TextFieldC(
                               controller: _usernameController,
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                labelText: 'Username',
-                              ),
+                              label: 'Username',
+                              name: 'username',
                             ),
                             const SizedBox(height: 10),
-                            TextField(
+                            TextFieldC(
                               controller: _passwordController,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                labelText: 'password',
-                              ),
+                              isPassword: true,
+                              label: 'Password',
+                              name: 'password',
                             ),
                             const SizedBox(height: 10),
-                            TextField(
+                            TextFieldC(
                               controller: _confirmPasswordController,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                labelText: 'Confirm password',
-                              ),
+                              isPassword: true,
+                              label: 'Confirm Password',
+                              name: 'confirmPassword',
                             ),
                             const SizedBox(height: 30),
                             Row(
@@ -123,7 +127,10 @@ class RegisterScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 5),
                             ElevatedButton(
-                                onPressed: _onSubmit,
+                                onPressed: () => _onSubmit(
+                                      context,
+                                      () => Navigator.pop(context),
+                                    ),
                                 child: const Text('Register')),
                           ],
                         ),

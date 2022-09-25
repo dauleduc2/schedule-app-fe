@@ -4,28 +4,30 @@ import 'package:dio/dio.dart';
 import 'package:schedule_app_fe/core/constants/store.dart';
 import 'package:schedule_app_fe/core/injection/index.dart';
 import 'package:schedule_app_fe/core/providers/api.provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:schedule_app_fe/util/sharePreferenceHelper.dart';
 
 class ApiClient {
-  final _apiProvider = getIt<ApiProvider>();
+  final ApiProvider _apiProvider;
   Dio http = Dio(
     BaseOptions(
       baseUrl: 'http://10.0.2.2:4000/api',
     ),
   );
 
-  ApiClient() {
+  ApiClient(this._apiProvider) {
     handleOnLoad();
   }
 
   handleOnLoad() async {
     http.interceptors
         .add(InterceptorsWrapper(onRequest: (options, handler) async {
-      final prefs = await SharedPreferences.getInstance();
+      final SharedPreferenceHelper preferenceHelper =
+          getIt<SharedPreferenceHelper>();
+
       // include headers
-      if (prefs.containsKey(StoreKey.authToken)) {
+      if (preferenceHelper.instance.containsKey(StoreKey.authToken)) {
         options.headers[StoreKey.authToken] =
-            'Bearer ${prefs.getString(StoreKey.authToken)}';
+            'Bearer ${preferenceHelper.authToken}';
       }
 
       return handler.next(options);
@@ -37,9 +39,7 @@ class ApiClient {
             json.decode(e.response.toString()).cast<String, String>();
         _apiProvider.setErrorDetails(errorDetails);
       }
-      return handler.next(json.decode(e.response.toString()));
+      return handler.next(e);
     }));
   }
 }
-
-ApiClient httpClient = ApiClient();
