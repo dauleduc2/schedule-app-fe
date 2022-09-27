@@ -2,25 +2,27 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:schedule_app_fe/core/api/auth.api.dart';
-import 'package:schedule_app_fe/core/injection/index.dart';
 import 'package:schedule_app_fe/core/model/user.dart';
 
-final defaultUser = User(
-    email: 'dauleduc2@gmail.com',
-    id: '1',
-    name: 'Duc Dauuu',
-    password: '111',
-    username: 'dauleduc2');
+final defaultUser =
+    User(email: '', id: '', name: '', password: '', username: '');
 
 class UserProvider extends ChangeNotifier {
+  final AuthApi _authApi;
+
   User currentUser = defaultUser;
   bool isLogin = false;
-  final AuthApi _authApi;
 
   UserProvider(this._authApi);
 
   set setIsLogin(bool isLogin) {
     this.isLogin = isLogin;
+    notifyListeners();
+  }
+
+  void resetData() {
+    currentUser = defaultUser;
+    isLogin = false;
     notifyListeners();
   }
 

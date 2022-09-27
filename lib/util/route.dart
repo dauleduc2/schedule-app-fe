@@ -15,8 +15,8 @@ class PageNavigator {
             end: const Offset(0, 0),
           ).animate(CurvedAnimation(curve: const Interval(0, 1), parent: anim)),
           child: child),
-      reverseTransitionDuration: Duration(milliseconds: 300),
-      transitionDuration: Duration(milliseconds: 300),
+      reverseTransitionDuration: const Duration(milliseconds: 300),
+      transitionDuration: const Duration(milliseconds: 300),
     ));
   }
 
@@ -29,8 +29,8 @@ class PageNavigator {
             end: const Offset(0, 0),
           ).animate(CurvedAnimation(curve: const Interval(0, 1), parent: anim)),
           child: child),
-      reverseTransitionDuration: Duration(milliseconds: 300),
-      transitionDuration: Duration(milliseconds: 300),
+      reverseTransitionDuration: const Duration(milliseconds: 300),
+      transitionDuration: const Duration(milliseconds: 300),
     ));
   }
 }

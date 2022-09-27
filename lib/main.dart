@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:schedule_app_fe/core/injection/index.dart';
 import 'package:schedule_app_fe/core/providers/api.provider.dart';
+import 'package:schedule_app_fe/core/providers/ui.provider.dart';
 import 'package:schedule_app_fe/core/providers/user.provider.dart';
 import 'package:schedule_app_fe/screens/money.dart';
 import 'package:schedule_app_fe/screens/profile.dart';
@@ -11,6 +12,7 @@ import 'package:schedule_app_fe/screens/schedule.dart';
 import 'package:schedule_app_fe/screens/setting.dart';
 import 'package:schedule_app_fe/widgets/autoLogin/autoLogin.dart';
 import 'package:schedule_app_fe/widgets/bottomNavigation/index.dart';
+import 'package:schedule_app_fe/widgets/loadingOverlay/index.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,14 +35,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final ApiProvider _apiProvider = getIt<ApiProvider>();
   final UserProvider _userProvider = getIt<UserProvider>();
+  final UiProvider _uiProvider = getIt<UiProvider>();
 
   int _currentIndex = 0;
 
   List<Widget> widgetList = <Widget>[
     const ScheduleScreen(),
     const MoneyScreen(),
-    const ProfileScreen(),
-    const SettingScreen(),
+    ProfileScreen(),
+    SettingScreen(),
   ];
 
   void _onChangeTab(int index) {
@@ -54,7 +57,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => _userProvider),
-        ChangeNotifierProvider(create: (ctx) => _apiProvider)
+        ChangeNotifierProvider(create: (ctx) => _apiProvider),
+        ChangeNotifierProvider(create: (ctx) => _uiProvider)
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -67,20 +71,22 @@ class _MyAppState extends State<MyApp> {
               labelSmall: TextStyle(fontSize: 8),
             )),
         home: Consumer<UserProvider>(
-          builder: (context, value, child) => Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              title: const Text('Schedule App'),
+          builder: (context, value, child) => LoadingOverlay(
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+                title: const Text('Schedule App'),
+              ),
+              body: FractionallySizedBox(
+                widthFactor: 1,
+                heightFactor: 1,
+                child: AutoLogin(children: widgetList[_currentIndex]),
+              ),
+              bottomNavigationBar: value.isLogin
+                  ? CBottomNavigationBar(
+                      currentIndex: _currentIndex, onChangeTab: _onChangeTab)
+                  : null,
             ),
-            body: FractionallySizedBox(
-              widthFactor: 1,
-              heightFactor: 1,
-              child: AutoLogin(children: widgetList[_currentIndex]),
-            ),
-            bottomNavigationBar: value.isLogin
-                ? CBottomNavigationBar(
-                    currentIndex: _currentIndex, onChangeTab: _onChangeTab)
-                : null,
           ),
         ),
       ),

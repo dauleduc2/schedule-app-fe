@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:schedule_app_fe/core/providers/api.provider.dart';
 
 class TextFieldC extends StatelessWidget {
-  TextEditingController controller;
-  String? label;
-  bool isPassword;
-  String error;
-  String name;
-  TextFieldC(
+  final TextEditingController controller;
+  final String? label;
+  final bool isPassword;
+  final String error;
+  final String name;
+  const TextFieldC(
       {super.key,
       required this.controller,
       this.error = '',

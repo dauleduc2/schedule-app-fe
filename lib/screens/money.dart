@@ -5,6 +5,6 @@ class MoneyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('Money');
+    return const Text('Money');
   }
 }

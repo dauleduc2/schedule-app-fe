@@ -121,7 +121,7 @@ class RegisterScreen extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text('Sign in'),
+                                  child: const Text('Sign in'),
                                 )
                               ],
                             ),

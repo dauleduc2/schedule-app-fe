@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:schedule_app_fe/core/api/auth.api.dart';
-import 'package:schedule_app_fe/core/constants/store.dart';
 import 'package:schedule_app_fe/core/form/ErrorMessage.dart';
 import 'package:schedule_app_fe/core/form/TextField.dart';
 import 'package:schedule_app_fe/core/injection/index.dart';
@@ -10,7 +9,6 @@ import 'package:schedule_app_fe/core/providers/user.provider.dart';
 import 'package:schedule_app_fe/screens/register.dart';
 import 'package:schedule_app_fe/util/route.dart';
 import 'package:schedule_app_fe/util/sharePreferenceHelper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -96,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           PageNavigator.rightToLeft(context, RegisterScreen());
                         },
-                        child: Text('Register an account'),
+                        child: const Text('Register an account'),
                       ),
                     ),
                     const SizedBox(height: 5),

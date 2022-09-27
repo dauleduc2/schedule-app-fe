@@ -1,12 +1,41 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:schedule_app_fe/core/injection/index.dart';
+import 'package:schedule_app_fe/core/providers/user.provider.dart';
+import 'package:schedule_app_fe/util/sharePreferenceHelper.dart';
+
+class SettingList {
+  String title;
+  IconData icon;
+  VoidCallback onTap;
+
+  SettingList({required this.title, required this.icon, required this.onTap});
+}
 
 class SettingScreen extends StatelessWidget {
-  const SettingScreen({super.key});
+  SettingScreen({super.key});
+
+  final List<SettingList> _settingList = [
+    SettingList(title: "Setting", icon: Icons.settings, onTap: () {}),
+    SettingList(title: "Help", icon: Icons.help, onTap: () {}),
+    SettingList(title: "About", icon: Icons.info, onTap: () {}),
+    SettingList(
+        title: "Logout",
+        icon: Icons.logout,
+        onTap: () {
+          getIt<SharedPreferenceHelper>().removeAuthToken();
+          getIt<UserProvider>().resetData();
+        }),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Settinggs'),
+    return ListView(
+      children: _settingList.map((e) {
+        return Card(
+          child: ListTile(
+              title: Text(e.title), leading: Icon(e.icon), onTap: e.onTap),
+        );
+      }).toList(),
     );
   }
 }
