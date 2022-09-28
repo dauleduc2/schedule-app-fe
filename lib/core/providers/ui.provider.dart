@@ -7,7 +7,6 @@ class UiProvider extends ChangeNotifier {
   String title = 'Schedule App';
 
   set setIsLoading(bool isLogin) {
-    print("set isloading $isLogin");
     isLoading = isLogin;
     notifyListeners();
   }

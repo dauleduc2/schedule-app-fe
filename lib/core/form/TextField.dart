@@ -8,12 +8,14 @@ class TextFieldC extends StatelessWidget {
   final bool isPassword;
   final String error;
   final String name;
+  final dynamic defaultValue;
   const TextFieldC(
       {super.key,
       required this.controller,
       this.error = '',
       this.label = '',
       this.name = '',
+      this.defaultValue = '',
       this.isPassword = false});
 
   @override
